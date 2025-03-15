@@ -47,7 +47,7 @@ MarkupSafe==1.1.1
 paramiko==2.6.0
 passlib==1.7.1
 pbr==3.1.1
-psycopg2-binary==2.9.10
+#psycopg2-binary==2.9.10
 #psycopg2==2.9.10
 pycparser==2.19
 #pycrypto==2.6.1
