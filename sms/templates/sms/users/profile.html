@@ -1,0 +1,490 @@
+{% extends 'base.html' %}
+{% load static humanize %}
+
+{% block title %} Profile {% endblock title %}
+
+{% block main %}
+    <div class="container-fluid ">
+
+      <!--Section: Team v.1-->
+      <section class="section team-section">
+        {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+   {% if form %}
+   <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <strong>Please correct the errors below</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+   {% for field in form %}
+    {% if field.errors %}
+     {% for error in field.errors %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong class="{{ message.tags }}">{{ field.label }}: {{ error }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+  {% endif %}
+        <!--Grid row-->
+        <div class="row text-center">
+          {% if request.user.id == user.id %}
+          <!-- Grid column -->
+          <div class="col-md-8 mb-4">
+
+            <!--Card-->
+            <div class="card card-cascade cascading-admin-card user-card">
+
+              <!--Card Data-->
+              <div class="admin-up d-flex justify-content-start">
+                <i class="fas fa-users info-color py-4"> {{ user.username|upper }}</i>
+                <div class="data">
+                  <h5 class="font-weight-bold dark-grey-text">Edit Profile - <span class="text-muted">
+                    {% if '' in user.email or '' in user.phone or '' in user.dob or '' in user.address or '' in user.religion or '' in user.dob %}Complete your
+                      profile{% endif %}</span></h5>
+                </div>
+              </div>
+              <!--/.Card Data-->
+
+              <!--Card content-->
+              <div class="card-body card-body-cascade">
+                <form method="post">{% csrf_token %}
+
+                <!-- Grid row -->
+                <div class="row">
+
+                  <!-- Grid column -->
+                  <div class="col-lg-4">
+
+                    <div class="md-form form-sm mb-0">
+                      <input name="username" value="{{ user.username }}" disabled readonly type="text" id="form12" class="form-control form-control-sm">
+                      <label for="form12" class="">Username</label>
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                  <!-- Grid column -->
+                  <div class="col-lg-4">
+
+                    <div class="md-form form-sm mb-0">
+                      <input disabled tabindex="1" name="email" type="email" value="{{ user.email|title }}" id="form3" class="form-control form-control-sm">
+                      <label for="form3" class="">Email address</label>
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                  <!-- Grid column -->
+                  <div class="col-lg-4">
+                    <div class="md-form form-sm mb-0">
+                      <input disabled tabindex="2" name="phone" value="{{ user.phone }}" type="text" id="form6" class="form-control form-control-sm">
+                      <label for="form6" class="">Phone number</label>
+                    </div>
+                  </div>
+                  <!-- Grid column -->
+
+                </div>
+                <!-- Grid row -->
+
+                <!-- Grid row -->
+                <div class="row">
+
+                  <!-- Grid column -->
+                  <div class="col-md-6">
+
+                    <div class="md-form form-sm mb-0">
+                      <input disabled tabindex="3" name="firstname" value="{{ user.first_name|title }}" type="text" id="form5" class="form-control form-control-sm">
+                      <label for="form5" class="">First name</label>
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                  <!-- Grid column -->
+                  <div class="col-md-6">
+
+                    <div class="md-form form-sm mb-0">
+                      <input disabled tabindex="4" name="surname" value="{{ user.last_name|title }}" type="text" id="form5" class="form-control form-control-sm">
+                      <label for="form5" class="">Last name</label>
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                </div>
+                <!-- Grid row -->
+
+                <!-- Grid row -->
+                <div class="row">
+
+                  <!-- Grid column -->
+                  <div class="col-md-12">
+                    <div class="md-form form-sm mb-0">
+                      <input disabled maxlength="60" tabindex="5" name="address" value="{{ user.address|title }}" type="text" id="form4" class="form-control form-control-sm">
+                      <label for="form4">Address</label>
+                    </div>
+                  </div>
+                  <!-- Grid column -->
+
+                </div>
+                <!-- Grid row -->
+
+                <!-- Grid row -->
+                <div class="row">
+
+                  <!-- Grid column -->
+                  <div class="col-lg-4 col-md-12">
+
+                    <div class="md-form form-sm mb-0">
+                      <input disabled tabindex="6" value="{{ user.dob }}" name="dob" type="date" id="form7" class="form-control form-control-sm">
+
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                  <!-- Grid column -->
+                  <div class="col-lg-4 col-md-6">
+
+                    <div class="md-form form-sm mb-0">
+                      <input value="{{ user.other_name|title }}" tabindex="7" name="othername" disabled type="text" id="form8" class="form-control form-control-sm">
+                      <label for="form8" class="">Othername</label>
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                  <!-- Grid column -->
+                  <div class="col-lg-4 col-md-6">
+
+                    <div class="md-form form-sm mb-0">
+                      <select tabindex="8" name="term" class="mdb-select md-form">
+                        <option value="" disabled selected>{{ user.religion }} (Selected religion)</option>
+                        <option value="First">Islam</option>
+                        <option value="Second">Christianity</option>
+                        <option value="Third">Other</option>
+                      </select>
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                </div>
+                <!-- Grid row -->
+
+                <!-- Grid row -->
+                <div class="col-lg-4 col-md-6">
+                  <div class="md-form form-sm mb-0">
+                    <input disabled style="padding: 10px; margin-right: 50px" tabindex="8" name="submit" type="submit" value="Save Changes" class="form-control form-control-sm btn btn-primary">
+                  </div>
+
+                </div>
+                <!-- Grid row -->
+              </form>
+              </div>
+              <!--/.Card content-->
+
+            </div>
+            <!--/.Card-->
+
+          </div>
+          {% else %}
+                    <!-- Grid column -->
+          <div class="col-md-8 mb-4">
+
+            <!--Card-->
+            <div class="card card-cascade cascading-admin-card user-card">
+
+              <!--Card Data-->
+              <div class="admin-up d-flex justify-content-start">
+                <i class="fas fa-users info-color py-4">{{ user.username|title }}</i>
+                <div class="data">
+                  <h5 class="font-weight-bold dark-grey-text">
+                  {{ user.get_full_name|title }}'s Profile
+                </span></h5>
+                </div>
+              </div>
+              <!--/.Card Data-->
+
+              <!--Card content-->
+              <div class="card-body card-body-cascade">
+
+                <!-- Grid row -->
+                <div class="row">
+
+                  <!-- Grid column -->
+                  <div class="col-lg-4">
+
+                    <div class="md-form form-sm mb-0">
+                      <input value="{{ user.username|title }}" disabled readonly type="text" id="form12" class="form-control form-control-sm">
+                      <label for="form12" class="">Username</label>
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                  <!-- Grid column -->
+                  <div class="col-lg-4">
+
+                    <div class="md-form form-sm mb-0">
+                      <input disabled tabindex="1" name="email" type="email" value="{{ user.email|title }}" id="form3" class="form-control form-control-sm">
+                      <label for="form3" class="">Email address</label>
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                  <!-- Grid column -->
+                  <div class="col-lg-4">
+                    <div class="md-form form-sm mb-0">
+                      <input disabled tabindex="2" name="phone" value="{{ user.phone }}" type="text" id="form6" class="form-control form-control-sm">
+                      <label for="form6" class="">Phone number</label>
+                    </div>
+                  </div>
+                  <!-- Grid column -->
+
+                </div>
+                <!-- Grid row -->
+
+                <!-- Grid row -->
+                <div class="row">
+
+                  <!-- Grid column -->
+                  <div class="col-md-6">
+
+                    <div class="md-form form-sm mb-0">
+                      <input disabled tabindex="3" name="firstname" value="{{ user.first_name|title }}" type="text" id="form5" class="form-control form-control-sm">
+                      <label for="form5" class="">First name</label>
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                  <!-- Grid column -->
+                  <div class="col-md-6">
+
+                    <div class="md-form form-sm mb-0">
+                      <input disabled tabindex="4" name="surname" value="{{ user.last_name|title }}" type="text" id="form5" class="form-control form-control-sm">
+                      <label for="form5" class="">Last name</label>
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                </div>
+                <!-- Grid row -->
+
+                <!-- Grid row -->
+                <div class="row">
+
+                  <!-- Grid column -->
+                  <div class="col-md-12">
+                    <div class="md-form form-sm mb-0">
+                      <input disabled maxlength="60" tabindex="5" name="address" value="{{ user.address|title }}" type="text" id="form4" class="form-control form-control-sm">
+                      <label for="form4">Address</label>
+                    </div>
+                  </div>
+                  <!-- Grid column -->
+
+                </div>
+                <!-- Grid row -->
+
+                <!-- Grid row -->
+                <div class="row">
+
+                  <!-- Grid column -->
+                  <div class="col-lg-4 col-md-12">
+
+                    <div class="md-form form-sm mb-0">
+                      <input disabled tabindex="6" value="{{ user.dob|date:"Y-m-d" }}" name="dob" type="text" id="form7" class="form-control form-control-sm datepicker">
+                      <label for="form7" class="">Date of birth</label>
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                  <!-- Grid column -->
+                  <div class="col-lg-4 col-md-6">
+
+                    <div class="md-form form-sm mb-0">
+                      <input value="{{ user.othername|title }}" tabindex="7" name="othername" disabled type="text" id="form8" class="form-control form-control-sm">
+                      <label for="form8" class="">Othername</label>
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                  <!-- Grid column -->
+                  <div class="col-lg-4 col-md-6">
+
+                    <div class="md-form form-sm mb-0">
+                      <select tabindex="8" disabled name="term" class="mdb-select md-form">
+                        <option value="" disabled selected>{{ user.religion }}</option>
+                      </select>
+                    </div>
+
+                  </div>
+                  <!-- Grid column -->
+
+                </div>
+              </div>
+              <!--/.Card content-->
+
+            </div>
+            <!--/.Card-->
+
+          </div>
+          {% endif %}
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-md-4 mb-4">
+
+            <!--Card-->
+            <div class="card profile-card">
+
+              <!--Avatar-->
+              <div class="view overlay avatar z-depth-1-half mb-4">
+                <img src="{{ user.get_picture }}"  class="rounded-circle" alt="{{ user.get_picture }}'s picture">
+                {% if request.user.pk == user.pk %}
+                <a class="mask" data-toggle="modal" data-target="#uploadModal" href="#">
+                <div style="margin-top: 20px;" class="mask white-text">Change Picture</div>
+              </a>
+              {% endif %}
+              </div>
+
+              <div class="card-body pt-0 mt-0">
+                <!--Name-->
+                <h3 class="mb-3 font-weight-bold">
+                  <strong>
+                  {{ user.get_full_name|title }}
+                  </strong>
+                </h3>
+                <h6 class="font-weight-bold cyan-text mb-4">
+                {% if user.is_teacher %}
+                  Teacher
+                {% elif user.is_parent %}
+                  Parent
+                {% elif user.is_student %}
+                  Student
+                {% else %}
+                  System Administrator
+                {% endif %}</h6>
+
+                <p class="mt-4 text-left text-muted">Last login: {{ user.last_login|naturaltime }}</p>
+                <p class="mt-4 text-left text-muted">Phone: {% if user.phone %}{{ user.phone }}{% else %}N/A{% endif %}</p>
+                <p class="mt-4 text-left text-muted">Email: {% if user.email %}{{ user.email }}{% else %}N/A{% endif %}</p>
+                {% if user.id == request.user.id %}
+                <a id="edit_access" onclick="toggle_score_edit();" class="btn btn-info btn-rounded">
+                  Enable Editing
+                </a>
+                {% endif %}
+
+              </div>
+
+            </div>
+            <!--Card-->
+
+          </div>
+          <!-- Grid column -->
+
+        </div>
+        <!--Grid row-->
+
+      </section>
+      <!--Section: Team v.1-->
+
+    </div>
+  <!--Main layout-->
+
+  <!-- Upload Picture Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog cascading-modal modal-avatar modal-sm" role="document">
+    <!--Content-->
+    <div class="modal-content">
+
+      <!--Header-->
+      <div class="modal-header">
+        <img src="{{ user.get_picture }}" alt="avatar" class="rounded-circle img-responsive">
+      </div>
+      <!--Body-->
+      <form method="POST" action="{% url 'upload_profile_picture' %}" enctype="multipart/form-data">{% csrf_token %}
+      <div class="modal-body text-center mb-1">
+        <a href="" id="target"></a>
+        <h5 class="mt-1 mb-2">Upload Picture</h5>
+
+        <div class="md-form">
+          <input name="picture" type="file" class="form-control validate ml-0">
+        </div>
+        <h6 hidden id="loader_text" class="mt-1 mb-2">Please wait...</h6>
+        <div hidden id="loader" class="progress md-progress primary-color-dark">
+              <div class="indeterminate">
+              </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <button id="btn_upload" class="btn btn-cyan mt-1">Upload</button>
+        </div>
+      </div>
+    </form>
+
+    </div>
+    <!--/.Content-->
+  </div>
+</div>
+<!-- End of Modal Upload --> 
+
+{% block script %}
+<script type="text/javascript">
+function disableTxt() {
+    x = document.getElementsByClassName("form-control-sm");
+    for (i = 0; i < x.length; i++){
+      x[i].disabled = true
+    }
+}
+
+function undisableTxt() {
+    x = document.getElementsByClassName("form-control-sm");
+    for (i = 0; i < x.length; i++){
+      x[i].disabled = false
+    }
+  }
+
+function toggle_score_edit() {
+  y = document.getElementsByClassName("form-control-sm");
+    check = y[0].disabled
+    if (check===false){
+        document.getElementById("edit_access").innerHTML = "Enable Editing"
+      disableTxt();
+    }else{
+        document.getElementById("edit_access").innerHTML = "Disable Editing"
+      undisableTxt();
+    }
+}
+
+x = document.getElementsByClassName("form-control-sm");
+for (i = 0; i < x.length; i++){
+  x[i].disabled = true
+}
+
+$(document).ready(function(){
+  $("#btn_upload").click(function(){
+    $("#loader_text").removeAttr("hidden");
+    $("#loader").removeAttr("hidden");
+  });
+});
+</script>
+{% endblock script %}
+{% endblock main %}

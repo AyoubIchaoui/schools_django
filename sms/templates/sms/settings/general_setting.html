@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} General Setting {% endblock title %}
+{% block main %}
+  <div style="margin-bottom: 259px;" class="container-fluid">
+       <!-- Heading -->
+   <div class="card mb-4 wow fadeIn">
+      <!--Card content-->
+      <div class="card-body d-sm-flex justify-content-between">
+         <h6 class="mb-2 mb-sm-0 pt-1">
+            <a href="{% url 'home_page' %}">Home Page</a>
+            <span>/</span>
+            <span>General Setting</span>
+         </h6>
+      </div>
+   </div>
+   <!-- Heading -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-info alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message|safe }}
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% if form %}
+   <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <strong>Please correct the errors below</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% for field in form %}
+    {% if field.errors %}
+     {% for error in field.errors %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong class="{{ message.tags }}">{{ field.label }}: {{ error }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+  {% endif %}
+   <!-- Editable table -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Information</a>
+  </li>
+</ul>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+    <div class="row">
+      <div class="col-md-4">
+        <span>School Display Name:</span>
+        <input value="{{ s.school_name }}" name="school_name" type="text" class="form-control mb-4" placeholder="School name">
+       
+        <span>School Logo:</span>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+          </div>
+          <div class="custom-file">
+            <input value="{{ s.get_logo }}" name="school_logo" type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+            <label class="custom-file-label" for="inputGroupFile01">School logo</label>
+          </div>
+        </div><br>
+        {% if url %}
+        Uploaded logo: <img src="{{ url }}" width="65" class="rounded-circle">
+        {% endif %}
+        current logo: <img src="{{ s.get_logo }}" width="65" class="rounded-circle">
+        <br>
+        <br>
+        <span>Facebook Link:</span>
+        <input value="{{ s.social_link1|default_if_none:'' }}" name="social_link1" type="text" class="form-control mb-4" placeholder="Social Link 1">
+          <span>First term begins</span>
+        <input value="{{ s.ft_begins|date:"Y-m-d" }}" name="ft_begins" type="date" class="form-control mb-4">
+                 <span>Second term ends</span>
+        <input value="{{ s.st_ends|date:"Y-m-d" }}" name="st_ends" type="date" class="form-control mb-4">
+      </div>
+      <div class="col-md-4">
+        <span>School Physical Address:</span>
+        <input value="{{ s.school_address|default_if_none:'' }}" name="school_address" type="text" class="form-control mb-4" placeholder="School address">
+        <span>Motto:</span>
+        <input value="{{ s.school_slogan|default_if_none:'' }}" name="school_slogan" type="text" class="form-control mb-4" placeholder="School slogan">
+         <span>Business Phone:</span>
+        <input value="{{ s.business_phone1|default_if_none:'' }}" name="business_phone1" type="number" class="form-control mb-4" maxlength="11" minlength="11" placeholder="Business Phone">
+         <span>Twitter handler:</span>
+        <input value="{{ s.social_link2|default_if_none:'' }}" name="social_link2" type="text" class="form-control mb-4" placeholder="Twitter username">
+        <span>First term Ends</span>
+        <input value="{{ s.ft_ends|date:"Y-m-d" }}" name="ft_ends" type="date" class="form-control mb-4">
+        <span>Third term begins</span>
+        <input value="{{ s.tt_begins|date:"Y-m-d" }}" name="tt_begins" type="date" class="form-control mb-4">
+  </div>
+   <div class="col-md-4">
+    <span>Town:</span>
+        <input value="{{ s.school_town|default_if_none:'' }}" name="school_town" type="text" class="form-control mb-4" maxlength="20" placeholder="Town">
+                <span>Business Email:</span>
+        <input value="{{ s.business_email|default_if_none:'' }}" name="business_email" type="text" class="form-control mb-4" placeholder="Business Email">
+         <span>Alternative Business Phone:</span>
+        <input value="{{ s.business_phone2|default_if_none:'' }}" name="business_phone2" type="number" class="form-control mb-4" maxlength="11" minlength="11" placeholder="Alternative Business Phone Number">
+         <span>School Whatsapp Number:</span>
+        <input value="{{ s.social_link1|default_if_none:'' }}" name="social_link3" type="text" class="form-control mb-4" placeholder="in the format +2347000000000">
+         <span>Second term begins</span>
+        <input value="{{ s.st_begins|date:"Y-m-d" }}" name="st_begins" type="date" class="form-control mb-4">
+         <span>Third term ends</span>
+        <input value="{{ s.tt_ends|date:"Y-m-d" }}" name="tt_ends" type="date" class="form-control mb-4">
+      </div>
+  </div>
+</div>
+<input type="submit" name="submit" value="Save" style="margin-bottom: 27px;" class="btn btn-primary">
+</form>
+<h2 class="font-weight-bold my-5 text-left">THEMES</h2>
+
+<!--First row-->
+<div class="row">
+
+  <!--First column-->
+  <div class="col-md-12">
+    <!--Full width lightbox-->
+    <div class="mdb-lightbox">
+
+      <figure class="col-md-4">
+        <a data-size="1600x1067">
+          <img src="{% static 'img/skin-beauty.png' %}" class="img-fluid z-depth-1">
+        </a>
+        <button type="button" class="btn btn-dark btn-dark-skin w-responsive text-center mx-auto w-100 p-2 mt-2">Apply</button>
+      </figure>
+
+      <figure class="col-md-4">
+        <a data-size="1600x1067">
+          <img src="{% static 'img/skin-default.png' %}" class="img-fluid z-depth-1">
+        </a>
+        <button type="button" class="btn btn-default-skin btn-white black-text w-responsive text-center mx-auto w-100 p-2 mt-2">Apply</button>
+      </figure>
+
+      <figure class="col-md-4">
+        <a data-size="1600x1067">
+          <img src="{% static 'img/indigo-skin.png' %}" class="img-fluid z-depth-1">
+        </a>
+        <button type="button" class="btn btn-indigo-skin btn-indigo w-responsive text-center mx-auto w-100 p-2 mt-2">Apply</button>
+      </figure>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <!--Full width lightbox-->
+    <div class="mdb-lightbox">
+
+      <figure class="col-md-4">
+        <a data-size="1600x1067">
+          <img src="{% static 'img/pink-skin.png' %}" class="img-fluid z-depth-1">
+        </a>
+        <button type="button" class="btn btn-pink-skin btn-pink w-responsive text-center mx-auto w-100 p-2 mt-2">Apply</button>
+      </figure>
+
+      <figure class="col-md-4">
+        <a data-size="1600x1067">
+          <img src="{% static 'img/skin-cyan.png' %}" class="img-fluid z-depth-1">
+        </a>
+        <button type="button" class="btn btn-cyan-skin btn-cyan w-responsive text-center mx-auto w-100 p-2 mt-2">Apply</button>
+      </figure>
+
+      <figure class="col-md-4">
+        <a data-size="1600x1067">
+          <img src="{% static 'img/skin-black.png' %}" class="img-fluid z-depth-1">
+        </a>
+        <button type="button" class="btn btn-black-skin btn-black white-text w-responsive text-center mx-auto w-100 p-2 mt-2">Apply</button>
+      </figure>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <!--Full width lightbox-->
+    <div class="mdb-lightbox">
+
+      <figure class="col-md-4">
+        <a data-size="1600x1067">
+          <img src="{% static 'img/grey-skin.png' %}" class="img-fluid z-depth-1">
+        </a>
+        <button type="button" class="btn btn-grey-skin btn-grey w-responsive text-center mx-auto w-100 p-2 mt-2">Apply</button>
+      </figure>
+
+      <figure class="col-md-4">
+        <a data-size="1600x1067">
+          <img src="{% static 'img/light-blue-skin.png' %}" class="img-fluid z-depth-1">
+        </a>
+        <button type="button" class="btn btn-blue-skin btn-primary w-responsive text-center mx-auto w-100 p-2 mt-2">Apply</button>
+      </figure>
+
+      <figure class="col-md-4">
+        <a data-size="1600x1067">
+          <img src="{% static 'img/navy-blue-skin.png' %}" class="img-fluid z-depth-1">
+        </a>
+        <button type="button" class="btn btn-n-blue-skin btn-dark w-responsive text-center mx-auto w-100 p-2 mt-2">Apply</button>
+      </figure>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <!--Full width lightbox-->
+    <div class="mdb-lightbox">
+
+      <figure class="col-md-4">
+        <a data-size="1600x1067">
+          <img src="{% static 'img/deep-purple-skin.png' %}" class="img-fluid z-depth-1">
+        </a>
+        <button type="button" class="btn btn-purple-skin btn-purple w-responsive text-center mx-auto w-100 p-2 mt-2">Apply</button>
+      </figure>
+    </div>
+  </div>
+
+    </div>
+    <!--/Full width lightbox-->
+
+  </div>
+  <!--/First column-->
+
+</div>
+<!--First row-->
+</div>
+  {% block script %}
+  <script>
+    $("#btn-default-skin").on("click", ()=>{
+      $("body").addClass("white-skin");
+    });
+  </script>
+  {% endblock script %}
+{% endblock %}

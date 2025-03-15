@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Attendances {% endblock title %}
+{% block main %}
+   <div class="container-fluid">
+   <!-- Heading -->
+   <div class="card mb-4 wow fadeIn">
+      <!--Card content-->
+      <div class="card-body d-sm-flex justify-content-between">
+         <h6 class="mb-2 mb-sm-0 pt-1">
+            <a href="{% url 'home_page' %}">Home Page</a>
+            <span>/</span>
+            <a href="{% url 'attendance_list' %}">Attendance</a>
+            <span>/</span>
+            <span>Add Attendance</span>
+         </h6>
+      </div>
+   </div>
+   <!-- Heading -->
+          {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-info alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message|safe }}
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% if form %}
+   <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <strong>Please correct the errors below</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% for field in form %}
+    {% if field.errors %}
+     {% for error in field.errors %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong class="{{ message.tags }}">{{ field.label }}: {{ error }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+  {% endif %}
+   <!-- Editable table -->
+   <div class="card">
+    <span class="card-header white-text text-uppercase py-1">
+      <small class="text-left">Add Attendance :</small>
+      {% if selected_class %}
+      <small class="ml-xl-5">Class: {{ selected_class }}</small>
+      {% endif %}
+      {% if term %}
+      <small class="ml-xl-5">Term: {{ term }}</small>
+      {% endif %}
+      {% if date %}
+      <small class="ml-xl-5">Date: {{ date|date:'l, F j, Y' }}</small>
+      {% endif %}
+    </span>
+      <div class="container">
+         <form method="post">{% csrf_token %}
+         <div class="row">
+            <div class="col-md-3">
+               <select name="class" class="mdb-select md-form">
+                <option value="" disabled selected>Select a class</option>
+                {% for class in classes %}
+                <option value="{{ class.id }}">{{ class.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-3">
+               <select name="term" class="mdb-select md-form">
+                <option value="" disabled selected>Select a term</option>
+                <option value="First">First</option>
+                <option value="Second">Second</option>
+                <option value="Third">Third</option>
+              </select>
+            </div>
+            <div class="md-form">
+              <input name="date" placeholder="Select a date" type="text" id="date-picker-example" class="form-control datepicker">
+              <label for="date-picker-example">Day of attendance</label>
+            </div>
+            <div style="text-align: right;" class="col-md-3">
+               <input id="getList" type="submit" value="Add Attendance" name="submit" class="md-form form-control btn btn-info">
+            </div>
+         </div>
+      </form>
+      </div>
+      <div class="card-body">
+         <div id="table" class="table-editable">
+          <form method="post"  action="{% url 'save_attendance' %}">{% csrf_token %}
+            <table class="table table-bordered table-responsive-md table-striped text-center">
+               <tr>
+                  <th class="text-center">Student</th>
+                  <th class="text-center">Roll</th>
+                  <th class="text-center">Present / Absent</th>
+                  <th class="text-center">Is late</th>
+                  <th class="text-center">Duration (minutes)</th>
+               </tr>
+               {% for each in students %}
+               <input hidden type="text" name="selected_term"\
+                      value="{{ term }}">
+                <input hidden type="text" name="selected_date"\
+                      value="{{ date|date:'Y-m-d' }}">
+               <input hidden type="text" name="student_id" \
+                      value="{{ each.id }}">
+                  <tr>
+                     <td class="text-left pt-3-half" contenteditable="false">
+                        {{ each.user.get_full_name }}
+                     </td>
+                     <td class="pt-3-half" contenteditable="false">
+                        {{ each.roll_number }}
+                     </td>
+                     <td title="Check to toggle between present and absent" class="pt-3-half" contenteditable="false">
+                      <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                          <input id="goo" type="checkbox" unchecked name="status" class="custom-control-input" tabindex="5">
+                        <span class="custom-control-label" for="status"> Absent</span>
+                      </label>
+                      </div>
+                     </td>
+
+                     <td data-toggle="tooltip"  title="Student must be Present for this  to work" class="pt-3-half" contenteditable="false">
+                      <div class="switch">
+                        <label>
+                          No
+                          <input name="is_late" type="checkbox" id="is_late" disabled>
+                          <span class="lever"></span> Yes
+                        </label>
+                      </div>
+                    </td>
+                     <td class="pt-3-half" contenteditable="false">
+                       <input data-toggle="tooltip" id="late_coming" title="in minutes" value="0" class=" form-control form-control-sm" type="number" name="duration" hidden>
+                     </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                     <td id="no_data">No data available</td>
+                  </tr>
+                  {% endfor %}
+            </table>
+            <input type="submit" name="submit" value="Save Attendance" id="saveAttendance" class="md-form form-control btn btn-primary" hidden>
+          </form>
+         </div>
+      </div>
+   </div>
+</div>
+{% block script %}
+  <script src="{% static 'js/sms/attendance.js' %}"></script>
+{% endblock script %}
+{% endblock main %}
